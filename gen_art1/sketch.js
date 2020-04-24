@@ -1,3 +1,12 @@
+//capturer
+
+let vidLength = 600;
+//let frameTillNow;
+let canvas;
+//var startMillis;
+
+//Variables
+
 let w = [];
 const num = 170;
 
@@ -8,6 +17,7 @@ function setup() {
 	let cnvs = createCanvas(900, 900);
 	cnvs.parent('animationCanvas');
 	background(30,30,40);
+	canvas = cnvs.canvas;
 
 	//palette[0] = color(154, 202, 62);
 	palette[0] = color(151, 71, 140);
@@ -21,9 +31,13 @@ function setup() {
 		let ranCol = floor(random(palette.length));
 		w[x] = new Walker(palette[ranCol]);
 	}
+
+	capturer.start();
 }
 
 function draw() {
+
+	
 for (let x = 0; x < num; x++){
 		w[x].update();
 		w[x].display();
@@ -33,4 +47,17 @@ for (let x = 0; x < num; x++){
 
 	//let ranCol = floor(random(palette.length));
 	//console.log(palette[ranCol]);
+
+	//capturer
+	if (frameCount < vidLength){
+    capturer.capture(canvas);
+  }else if(frameCount == vidLength){
+    capturer.stop();
+    capturer.save();
+  }
 }
+//
+// function mousePressed(){
+// 	//frameTillNow = frameCount;
+//   capturer.start();
+// }
