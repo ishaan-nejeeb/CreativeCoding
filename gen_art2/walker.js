@@ -5,12 +5,12 @@ class Walker {
     // this.noiseY = random(100)-50;
     this.noiseX = x;
     this.noiseY = x;
-    this.noiseXIncrement = 0.007;
+    this.noiseXIncrement = 0.008;
     this.noiseYIncrement = 0.01;
-    this.x = noise(this.noiseX);
-    this.y = noise(this.noiseY);
-    this.x = map(this.x, 0, 1, 0, width);
-    this.y = map(this.y, 0, 1, 0, height);
+    this.x = map(noise(this.noiseX),0 ,1, 0, width);
+    this.y = map(noise(this.noiseY),0, 1, 0, height);
+    //this.x = map(this.x, 0, 1, 0, width);
+    //this.y = map(this.y, 0, 1, 0, height);
     // this.x;
     // this.y;
     this.pos = createVector(this.x,this.y);

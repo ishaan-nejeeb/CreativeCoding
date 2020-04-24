@@ -12,6 +12,14 @@
 	<script src="libraries/p5.sound.js"></script>
 	<script src="sketch.js"></script>
 	<script src="walker.js"></script>
+	<script src='node_modules/ccapture.js/build/CCapture.all.min.js'></script>
+	<script>
+		let capturer = new CCapture({
+			framerate: 10,
+			format: 'png',
+			verbose: true
+		});
+	</script>
 
 	<style>
 		body {
