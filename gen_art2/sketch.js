@@ -15,7 +15,7 @@ const yOffset = 20;
 var palette = [];
 
 function setup() {
-	frameRate(10);
+	frameRate(30);
 	let cnvs = createCanvas(900, 900);
 	cnvs.parent('animationCanvas');
 	background(30,30,40);
