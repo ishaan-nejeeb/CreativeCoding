@@ -30,7 +30,7 @@ public void setup() {
 //     PVector start = new PVector(random(width), random(height));
 //     particles.add(new Particle(start, random(2, 8)));
 //   }
-  background(0);
+  background(255);
 }
 
 public void draw() {
@@ -51,6 +51,8 @@ public class FlowField{
     float yinc = 0.05f;
     float zoff = 0;
     float angle;
+    int[] hue;
+    float[] perlinNoise;
     int scl;
 
     FlowField(int res){
@@ -58,6 +60,8 @@ public class FlowField{
         cols = floor(width/res) + 1;
         rows = floor(height/res) + 1;
         vectors = new PVector[cols*rows];
+        hue = new int[cols*rows];
+        perlinNoise = new float[cols*rows];
     }
 
     public void update(){
@@ -65,17 +69,31 @@ public class FlowField{
         for (int y = 0; y < rows; y++) {
             float xoff = 0;
             for (int x = 0; x < cols; x++) {
-                angle = noise(xoff, yoff, zoff) * TWO_PI * 4;
+                int index = x + y * cols;
+                perlinNoise[index] = noise(xoff, yoff, zoff);
+                //int thue = int(map(perlinNoise, 0, 1, 0, 255));
+                angle = perlinNoise[index] * TWO_PI * 4;
                 PVector v =PVector.fromAngle(angle);
                 v.setMag(1);
-                int index = x + y * cols;
+                
                 vectors[index] = v;
 
+                //hue[index] = thue;
                 xoff += xinc;  
             }
             yoff += yinc;
         }
         //zoff += 0.004;
+;
+        for (int y = 0; y < rows; y++) {
+            for (int x = 0; x < cols; x++) {
+                int index = x + y * cols;
+                int thue = PApplet.parseInt(map(perlinNoise[index], min(perlinNoise), max(perlinNoise), 0, 255));
+                
+
+                hue[index] = thue;
+            }
+        }
     }
 
     public void display(){
@@ -84,13 +102,17 @@ public class FlowField{
                 int index = x + y * cols;
                 PVector v = vectors[index];
 
-                stroke(255);
-                strokeWeight(1);
+
+                colorMode(HSB, 255);
+                //stroke(hue[index], 100, 100);
+                fill(hue[index], 255, 255);
+                strokeWeight(0);
                 pushMatrix();
                 translate(x * scl, y * scl);
                 //fill(map(angle,0,2*TWO_PI,0,255));
-                //rect(0, 0, scl, scl);
+                rect(0, 0, scl, scl);
                 rotate(v.heading());
+                stroke(0,0,0);
                 line(0, 0, scl, 0);
                 popMatrix();
             }
