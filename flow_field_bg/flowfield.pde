@@ -5,6 +5,7 @@ public class FlowField{
     float yinc = 0.05;
     float zoff = 0;
     float angle;
+    float[] perlinNoise;
     int scl;
 
     FlowField(int res){
@@ -12,6 +13,7 @@ public class FlowField{
         cols = floor(width/res) + 1;
         rows = floor(height/res) + 1;
         vectors = new PVector[cols*rows];
+        perlinNoise = new float[cols*rows];
     }
 
     void update(){
@@ -19,11 +21,14 @@ public class FlowField{
         for (int y = 0; y < rows; y++) {
             float xoff = 0;
             for (int x = 0; x < cols; x++) {
-                angle = noise(xoff, yoff, zoff) * TWO_PI * 4;
+                float tempNoise = noise(xoff, yoff, zoff);
+                angle = tempNoise * TWO_PI * 4;
                 PVector v =PVector.fromAngle(angle);
-                v.setMag(1);
+                //v.setMag(v.mag() * 1);
+                //v.setMag(1);
                 int index = x + y * cols;
                 vectors[index] = v;
+                perlinNoise[index] = tempNoise;
 
                 xoff += xinc;  
             }
@@ -38,14 +43,15 @@ public class FlowField{
                 int index = x + y * cols;
                 PVector v = vectors[index];
 
-                stroke(255);
-                strokeWeight(1);
+                stroke(0);
+                strokeWeight(0);
                 pushMatrix();
                 translate(x * scl, y * scl);
                 //fill(map(angle,0,2*TWO_PI,0,255));
                 //rect(0, 0, scl, scl);
                 rotate(v.heading());
-                line(0, 0, scl, 0);
+                //line(0, 0, map(perlinNoise[index], min(perlinNoise), max(perlinNoise), 0, scl), 0);
+                line(0, 0, v.mag() * 50, 0);
                 popMatrix();
             }
         }

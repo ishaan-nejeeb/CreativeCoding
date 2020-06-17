@@ -14,7 +14,7 @@ void setup() {
 //     PVector start = new PVector(random(width), random(height));
 //     particles.add(new Particle(start, random(2, 8)));
 //   }
-  background(0);
+  background(255);
 }
 
 void draw() {

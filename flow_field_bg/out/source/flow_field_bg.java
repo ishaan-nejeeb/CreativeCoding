@@ -30,7 +30,7 @@ public void setup() {
 //     PVector start = new PVector(random(width), random(height));
 //     particles.add(new Particle(start, random(2, 8)));
 //   }
-  background(0);
+  background(255);
 }
 
 public void draw() {
@@ -51,6 +51,7 @@ public class FlowField{
     float yinc = 0.05f;
     float zoff = 0;
     float angle;
+    float[] perlinNoise;
     int scl;
 
     FlowField(int res){
@@ -58,6 +59,7 @@ public class FlowField{
         cols = floor(width/res) + 1;
         rows = floor(height/res) + 1;
         vectors = new PVector[cols*rows];
+        perlinNoise = new float[cols*rows];
     }
 
     public void update(){
@@ -65,11 +67,14 @@ public class FlowField{
         for (int y = 0; y < rows; y++) {
             float xoff = 0;
             for (int x = 0; x < cols; x++) {
-                angle = noise(xoff, yoff, zoff) * TWO_PI * 4;
+                float tempNoise = noise(xoff, yoff, zoff);
+                angle = tempNoise * TWO_PI * 4;
                 PVector v =PVector.fromAngle(angle);
-                v.setMag(1);
+                //v.setMag(v.mag() * 1);
+                //v.setMag(1);
                 int index = x + y * cols;
                 vectors[index] = v;
+                perlinNoise[index] = tempNoise;
 
                 xoff += xinc;  
             }
@@ -84,14 +89,15 @@ public class FlowField{
                 int index = x + y * cols;
                 PVector v = vectors[index];
 
-                stroke(255);
-                strokeWeight(1);
+                stroke(0);
+                strokeWeight(0);
                 pushMatrix();
                 translate(x * scl, y * scl);
                 //fill(map(angle,0,2*TWO_PI,0,255));
                 //rect(0, 0, scl, scl);
                 rotate(v.heading());
-                line(0, 0, scl, 0);
+                //line(0, 0, map(perlinNoise[index], min(perlinNoise), max(perlinNoise), 0, scl), 0);
+                line(0, 0, v.mag() * 50, 0);
                 popMatrix();
             }
         }
@@ -126,27 +132,31 @@ public class Particle {
     acc.add(force); 
   }
   public void show() {
-    stroke(255, 5);
-    strokeWeight(1);
+    stroke(0, 5);
+    strokeWeight(5);
     line(pos.x, pos.y, previousPos.x, previousPos.y);
     //point(pos.x, pos.y);
     updatePreviousPos();
   }
   public void edges() {
-    if (pos.x > width) {
+    if (pos.x >= width) {
       pos.x = 0;
+      //previousPos.x =0;
       updatePreviousPos();
     }
-    if (pos.x < 0) {
+    if (pos.x <= 0) {
       pos.x = width;    
+      //previousPos.y = width;
       updatePreviousPos();
     }
-    if (pos.y > height) {
+    if (pos.y >= height) {
       pos.y = 0;
+      //previousPos.y = 0;
       updatePreviousPos();
     }
-    if (pos.y < 0) {
+    if (pos.y <= 0) {
       pos.y = height;
+      //previousPos.y = height;
       updatePreviousPos();
     }
   }
@@ -160,7 +170,7 @@ public class Particle {
     int index = x + y * flowfield.cols;
     
     PVector force = flowfield.vectors[index];
-    applyForce(force);
+    applyForce(force.setMag(force.mag() * 2));
   }
 }
   public void settings() {  size(800, 800); }

@@ -27,27 +27,31 @@ public class Particle {
     acc.add(force); 
   }
   void show() {
-    stroke(255, 5);
-    strokeWeight(1);
+    stroke(0, 5);
+    strokeWeight(5);
     line(pos.x, pos.y, previousPos.x, previousPos.y);
     //point(pos.x, pos.y);
     updatePreviousPos();
   }
   void edges() {
-    if (pos.x > width) {
+    if (pos.x >= width) {
       pos.x = 0;
+      //previousPos.x =0;
       updatePreviousPos();
     }
-    if (pos.x < 0) {
+    if (pos.x <= 0) {
       pos.x = width;    
+      //previousPos.y = width;
       updatePreviousPos();
     }
-    if (pos.y > height) {
+    if (pos.y >= height) {
       pos.y = 0;
+      //previousPos.y = 0;
       updatePreviousPos();
     }
-    if (pos.y < 0) {
+    if (pos.y <= 0) {
       pos.y = height;
+      //previousPos.y = height;
       updatePreviousPos();
     }
   }
@@ -61,6 +65,6 @@ public class Particle {
     int index = x + y * flowfield.cols;
     
     PVector force = flowfield.vectors[index];
-    applyForce(force);
+    applyForce(force.setMag(force.mag() * 2));
   }
 }
